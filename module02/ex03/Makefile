@@ -7,7 +7,7 @@ CC = avr-gcc
 COPY = avr-objcopy
 MMCU = -mmcu=atmega328p
 PORT = /dev/ttyUSB0
-F_CPU = -F_CPU=16000000UL
+F_CPU = -DF_CPU=16000000UL
 BAUDRATE = 115200
 PROGRAMMER = arduino
 RM = rm -f
