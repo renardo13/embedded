@@ -43,7 +43,10 @@ void set_timer()
 
 void set_analog_to_digital_conv(void)
 {
-    ADMUX |= (1 << REFS0) | (1 << ADLAR);                                // Set AVCC as voltage reference, 8bits only
+    ADMUX &= ~(0b1111 << MUX0);
+    ADMUX |= (1 << MUX1);
+    ADMUX |= (1 << REFS0);                                // Set AVCC as voltage reference
+    ADMUX |= (1 << ADLAR);
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Prescaler = 128 (appropriate for 16 MHz clock)
     ADCSRA |= (1 << ADEN);                                // Enable ADC
 }
@@ -51,8 +54,7 @@ void set_analog_to_digital_conv(void)
 void start_adc_conversion(void)
 {
     ADCSRA |= (1 << ADSC);       // Start the conversion
-    while (ADCSRA & (1 << ADSC)) // Wait for the conversion to finish
-        ;
+    while (ADCSRA & (1 << ADSC)); // Wait for the conversion to finish;
 }
 
 // ISR for Timer1
@@ -60,7 +62,7 @@ ISR(TIMER1_COMPA_vect)
 {
     start_adc_conversion();
 
-    uint8_t val = ADC;
+    uint8_t val = ADCH;
 
     char base[16] = "0123456789ABCDEF";
 
@@ -76,7 +78,8 @@ int main(void)
     set_analog_to_digital_conv(); // Initialize ADC
 
     while (1)
-    {
+    { 
+        
     }
     return 0;
 }

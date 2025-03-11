@@ -43,7 +43,7 @@ void set_timer()
 
 void set_analog_to_digital_conv(void)
 {
-    ADMUX |= (1 << REFS0) | (1 << ADLAR);                                // Set AVCC as voltage reference, 8bits only
+    ADMUX |= (1 << REFS0);                                // Set AVCC as voltage reference
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Prescaler = 128 (appropriate for 16 MHz clock)
     ADCSRA |= (1 << ADEN);                                // Enable ADC
 }
@@ -60,12 +60,17 @@ ISR(TIMER1_COMPA_vect)
 {
     start_adc_conversion();
 
-    uint8_t val = ADC;
+    uint16_t val = ADC;
+    uint16_t nb = 0;
+    char base[10] = "0123456789"; // 1012
 
-    char base[16] = "0123456789ABCDEF";
-
-    uart_tx(base[val >> 4]);
-    uart_tx(base[val & 0x0F]);
+    int res = 0;
+    for (int i = 0; i >= 0; i--)
+    {
+        nb = val >> i;
+        res = nb + 10 * res;
+    }
+    uart_printstr(itoa(res));
     uart_printstr("\b\b");
 }
 

@@ -92,6 +92,7 @@ void init_rgb()
     TCCR2A |= (1 << COM2B1);                           // For the led PD3 (non-inverted PWM mode)
     TCCR2A |= (1 << WGM21) | (1 << WGM20);             // Fast PWM mode
     TCCR2B |= (1 << CS22) | (1 << CS21) | (1 << CS20); // Prescaler of 1024
+
 }
 
 int is_printable(char c)
@@ -103,7 +104,6 @@ int main(void)
 {
     char buffer[255];
     DDRD |= (1 << PD3) | (1 << PD5) | (1 << PD6); // Configure the LED RGB pins in output mode
-
     init_rgb();  // Initialize timer to control the intensity of RGB colors
     uart_init(); // Initialize UART
     while (1)
