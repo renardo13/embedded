@@ -6,22 +6,6 @@
 #define BAUDRATE 115200 // Bit rate
 #define PRESCALER 256   // Prescaler for Timer1
 
-// Function to transmit a character via UART
-void uart_tx(char c)
-{
-    while (!(UCSR0A & (1 << UDRE0)))
-        ;     // Wait for transmit buffer to be empty
-    UDR0 = c; // Send the character
-}
-
-// Function to transmit a character via UART
-char uart_rx(void)
-{
-    while (!(UCSR0A & (1 << RXC0)))
-        ;
-   return(UDR0);
-}
-
 // Function to initialize UART
 void uart_init(void)
 {

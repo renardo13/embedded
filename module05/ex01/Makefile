@@ -1,6 +1,6 @@
 # *.c must be converted into .bin and the .bin converted into .hex
 
-SRC = main.c
+SRC = main.c ../uart.c
 OBJ = main.bin
 NAME = main.hex
 CC = avr-gcc

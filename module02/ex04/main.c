@@ -5,45 +5,6 @@
 #define BAUDRATE 115200 // Bit rate
 #define PRESCALER 256   // Prescaler for Timer1
 
-void uart_tx(char c);
-
-// Function to transmit a character via UART
-void uart_tx(char c)
-{
-    while (!(UCSR0A & (1 << UDRE0))) // transmission register
-        ;
-    UDR0 = c; // Put the character in the buffer
-}
-
-char uart_rx(void)
-{
-    while (!(UCSR0A & (1 << RXC0))) // receive register
-        ;
-    return (UDR0); // Return the character
-}
-
-void uart_printstr(char *s)
-{
-    int i;
-
-    i = 0;
-    while (s[i])
-        uart_tx(s[i++]);
-}
-
-void uart_init(void)
-{
-    unsigned int ubrr;
-
-    ubrr = F_CPU / ((16 * BAUDRATE) + 1);
-    // Calculate baud rate register value
-    UBRR0H = ubrr >> 8; // Set high byte of baud rate
-    UBRR0L = ubrr;
-    UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0); // Enable transmitter and receiver
-    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
-    // Set frame format: 8 data bits, no parity, 1 stop bit
-}
-
 int strcmp(char *s1, char *s2)
 {
     while (*s1 && *s2 && *s1 == *s2)

@@ -1,35 +1,4 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-
-#define BAUDRATE 115200 // Bit rate
-#define PRESCALER 256   // Prescaler for Timer1
-
-// Function to transmit a character via UART
-void uart_tx(char c)
-{
-    while (!(UCSR0A & (1 << UDRE0)))
-        ;     // Wait for transmit buffer to be empty
-    UDR0 = c; // Send the character
-}
-
-void uart_printstr(const char *str)
-{
-    for (int i = 0; str[i]; i++)
-        uart_tx(str[i]);
-}
-
-// Function to initialize UART
-void uart_init(void)
-{
-    unsigned long uart_baudrate;
-
-    UCSR0B = (1 << TXEN0);                         // Enable transmitter
-    uart_baudrate = F_CPU / (16 * (BAUDRATE + 1)); // Calculate baud rate register value
-    UBRR0H = uart_baudrate >> 8;                   // Set high byte of baud rate
-    UBRR0L = uart_baudrate;                        // Set low byte of baud rate
-    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);        // Set frame format: 8 data bits, no parity, 1 stop bit (8N1)
-}
+#include "../uart.h"
 
 // Function to initialize Timer1
 void set_timer()
@@ -41,9 +10,10 @@ void set_timer()
     TIMSK1 |= (1 << OCIE1A);              // Enable Timer1 compare interrupt
 }
 
-void set_analog_to_digital_conv(void)
+void adc_init(void)
 {
-    ADMUX |= (1 << REFS0) | (1 << ADLAR);                                // Set AVCC as voltage reference, 8bits only
+    ADMUX |= (1 << REFS0);                                // Set AVCC as voltage reference
+    ADMUX |= (0 << ADLAR);                                // Set 8bits only precision
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Prescaler = 128 (appropriate for 16 MHz clock)
     ADCSRA |= (1 << ADEN);                                // Enable ADC
 }
@@ -59,13 +29,7 @@ void start_adc_conversion(void)
 ISR(TIMER1_COMPA_vect)
 {
     start_adc_conversion();
-
-    uint8_t val = ADC;
-
-    char base[16] = "0123456789ABCDEF";
-
-    uart_tx(base[val >> 4]);
-    uart_tx(base[val & 0x0F]);
+    print_hex(ADC);
     uart_printstr("\b\b");
 }
 
@@ -73,7 +37,7 @@ int main(void)
 {
     uart_init();                  // Initialize UART
     set_timer();                  // Initialize Timer1
-    set_analog_to_digital_conv(); // Initialize ADC
+    adc_init(); // Initialize ADC
 
     while (1)
     {
