@@ -27,7 +27,7 @@ Hardware Used: Breadboard, LEDs, sensors, potentiometer, USB-to-serial adapter
 
 -> Using timers for signal generation and delay management
 
-### Summury
+### 📖 Summury
 
 Module01 -> LED control (blinking sequences and PWM dimming)
 
