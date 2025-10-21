@@ -5,9 +5,13 @@ This project focuses on configuring and programming an ATmega328P microcontrolle
 ### 🧰 Tools & Environment
 
 Microcontroller: ATmega328P
+
 IDE / Compiler: AVR-GCC
+
 Flashing Tool: avrdude
+
 Programming Language: C
+
 Hardware Used: Breadboard, LEDs, sensors, potentiometer, USB-to-serial adapter
 
 
@@ -26,7 +30,12 @@ Hardware Used: Breadboard, LEDs, sensors, potentiometer, USB-to-serial adapter
 ### Summury
 
 Module01 -> LED control (blinking sequences and PWM dimming)
+
 Module02 -> UART communication for serial data transmission
+
 Module04 -> Timer configuration for precise time-based tasks
+
 Module04 -> Interrupt handling for real-time event management
+
 Module05 -> analog temperature sensor data using the ADC convert component
+
